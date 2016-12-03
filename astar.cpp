@@ -13,7 +13,7 @@ class Node {
 
 // the top of the priority queue is the greatest element by default,
 // but we want the smallest, so flip the sign
-bool compare(const Node &n1, const Node &n2) {
+bool operator<(const Node &n1, const Node &n2) {
   return n1.cost > n2.cost;
 }
 
