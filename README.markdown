@@ -1,5 +1,5 @@
-# A*
-This is a very simple C++ implementation of the A* algorithm for pathfinding
+# A\*
+This is a very simple C++ implementation of the A\* algorithm for pathfinding
 on a two-dimensional grid.  The compiled ```astar.so``` file is callable from Python.  See ```pyastar.py``` for the Python wrapper and
 ```examples.py``` for example usage.
 
@@ -12,11 +12,16 @@ so simple, I decided to implement it myself.
 
 ## Usage
 1. Run ```make``` to build the shared object file ```astar.so```.
-2. Set the ```MAZE_FPATH``` and ```OUTP_FPATH``` as desired.
+2. Set the ```MAZE_FPATH``` and ```OUTP_FPATH``` as desired in ```examples.py```.
 3. Run ```python examples.py```.
 
 ## Example Results
-To test the implementation, I grabbed two nasty mazes from Wikipedia.  They are included in the ```mazes``` directory, but are originall from here: [Small](https://upload.wikimedia.org/wikipedia/commons/c/cf/MAZE.png) and [Large](https://upload.wikimedia.org/wikipedia/commons/3/32/MAZE_2000x2000_DFS.png).
+To test the implementation, I grabbed two nasty mazes from Wikipedia.  They are
+included in the ```mazes``` directory, but are originally from here:
+[Small](https://upload.wikimedia.org/wikipedia/commons/c/cf/MAZE.png) and
+[Large](https://upload.wikimedia.org/wikipedia/commons/3/32/MAZE_2000x2000_DFS.png).
+I load the ```.png``` files as grayscale images, and set the white pixels to 1
+(open space) and the black pixels to ```INF``` (walls).
 
 For the small maze the input looks like this:
 <img src="mazes/maze_small.png" alt="Maze Small" style="width: 100%"/>
@@ -54,3 +59,8 @@ sys 0m2.273s
 
 The solution is visualized below:
 <img src="solns/maze_large_soln.png" alt="Maze Large Solution" style="width: 100%"/>
+
+## References
+1. [A\* search algorithm on Wikipedia](https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode)
+2. [Pathfinding with A* on Red Blob Games](http://www.redblobgames.com/pathfinding/a-star/introduction.html)
+
