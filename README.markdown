@@ -23,10 +23,7 @@ included in the ```mazes``` directory, but are originally from here:
 I load the ```.png``` files as grayscale images, and set the white pixels to 1
 (open space) and the black pixels to ```INF``` (walls).
 
-For the small maze the input looks like this:
-<img src="mazes/maze_small.png" alt="Maze Small" style="width: 100%"/>
-
-Run the code:
+Run the code on the small maze:
 ```
 time python examples.py 
 loaded maze of shape (1802, 1802)
@@ -42,10 +39,7 @@ sys 0m1.691s
 The solution is visualized below:
 <img src="solns/maze_small_soln.png" alt="Maze Small Solution" style="width: 100%"/>
 
-For the large maze, the input looks like this:
-<img src="mazes/maze_large.png" alt="Maze Large" style="width: 100%"/>
-
-Run the code:
+Run the code on the large maze:
 ```
 loaded maze of shape (4002, 4002)
 found path of length 783736 in 3.886067s
