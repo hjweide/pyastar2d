@@ -11,8 +11,9 @@ class Node {
     Node(int i, float c) : idx(i),cost(c) {}
 };
 
-// the top of the priority queue is the greatest element
-bool operator<(const Node &n1, const Node &n2) {
+// the top of the priority queue is the greatest element by default,
+// but we want the smallest, so flip the sign
+bool compare(const Node &n1, const Node &n2) {
   return n1.cost > n2.cost;
 }
 
