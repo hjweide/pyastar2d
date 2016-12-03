@@ -7,8 +7,8 @@ from time import time
 from os.path import basename, join, splitext
 
 # input/output files
-#MAZE_FPATH = join('mazes', 'maze_small.png')
-MAZE_FPATH = join('mazes', 'maze_large.png')
+MAZE_FPATH = join('mazes', 'maze_small.png')
+#MAZE_FPATH = join('mazes', 'maze_large.png')
 OUTP_FPATH = join('solns', '%s_soln.png' % splitext(basename(MAZE_FPATH))[0])
 
 
