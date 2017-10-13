@@ -25,7 +25,7 @@ I load the ```.png``` files as grayscale images, and set the white pixels to 1
 
 Run the code on the small maze:
 ```
-time python examples.py 
+time python examples.py
 loaded maze of shape (1802, 1802)
 found path of length 10031 in 0.258270s
 plotting path to solns/maze_small_soln.png
