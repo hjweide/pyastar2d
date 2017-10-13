@@ -44,7 +44,7 @@ extern "C" bool astar(
     costs[i] = INF;
   costs[start] = 0.;
 
-  std::priority_queue<Node> nodes_to_visit; 
+  std::priority_queue<Node> nodes_to_visit;
   nodes_to_visit.push(start_node);
 
   int* nbrs = new int[4];
@@ -72,9 +72,9 @@ extern "C" bool astar(
         float new_cost = costs[cur.idx] + weights[nbrs[i]];
         if (new_cost < costs[nbrs[i]]) {
           costs[nbrs[i]] = new_cost;
-          float priority = new_cost + heuristic(nbrs[i] / width, 
-                                                nbrs[i] % width, 
-                                                goal / width, 
+          float priority = new_cost + heuristic(nbrs[i] / width,
+                                                nbrs[i] % width,
+                                                goal / width,
                                                 goal % width);
           // paths with lower expected cost are explored first
           nodes_to_visit.push(Node(nbrs[i], priority));
