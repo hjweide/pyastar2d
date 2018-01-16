@@ -56,6 +56,7 @@ extern "C" bool astar(
 
     if (cur == goal_node) {
       solution_found = true;
+      printf("YES\n");
       break;
     }
 
