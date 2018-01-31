@@ -1,7 +1,7 @@
 # A\*
 This is a very simple C++ implementation of the A\* algorithm for pathfinding
 on a two-dimensional grid.  The compiled ```astar.so``` file is callable from Python.  See ```pyastar.py``` for the Python wrapper and
-```examples.py``` for example usage.
+```examples.py``` for example usage.  Uses 4-connectivity by default, set ```allow_diagonal=True``` for 8-connectivity.
 
 ## Motivation
 I recently needed an implementation of the A* algorithm in Python.

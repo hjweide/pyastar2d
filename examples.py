@@ -35,7 +35,8 @@ def main():
     end = np.array([end_i[0], grid.shape[0] - 1])
 
     t0 = time()
-    path = pyastar.astar_path(grid, start, end)
+    # set allow_diagonal=True to enable 8-connectivity
+    path = pyastar.astar_path(grid, start, end, allow_diagonal=False)
     dur = time() - t0
 
     if path.shape[0] > 0:
