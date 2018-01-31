@@ -74,12 +74,12 @@ extern "C" bool astar(
     int col = cur.idx % w;
     // check bounds and find up to eight neighbors: top to bottom, left to right
     nbrs[0] = (diag_ok && row > 0 && col > 0)          ? cur.idx - w - 1   : -1;
-    nbrs[1] = (row > 0)                     ? cur.idx - w       : -1;
+    nbrs[1] = (row > 0)                                ? cur.idx - w       : -1;
     nbrs[2] = (diag_ok && row > 0 && col + 1 < w)      ? cur.idx - w + 1   : -1;
-    nbrs[3] = (col > 0)                     ? cur.idx - 1       : -1;
-    nbrs[4] = (col + 1 < w)                 ? cur.idx + 1       : -1;
+    nbrs[3] = (col > 0)                                ? cur.idx - 1       : -1;
+    nbrs[4] = (col + 1 < w)                            ? cur.idx + 1       : -1;
     nbrs[5] = (diag_ok && row + 1 < h && col > 0)      ? cur.idx + w - 1   : -1;
-    nbrs[6] = (row + 1 < h)                 ? cur.idx + w       : -1;
+    nbrs[6] = (row + 1 < h)                            ? cur.idx + w       : -1;
     nbrs[7] = (diag_ok && row + 1 < h && col + 1 < w ) ? cur.idx + w + 1   : -1;
 
     float heuristic_cost;
