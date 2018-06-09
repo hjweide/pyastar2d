@@ -39,6 +39,7 @@ def astar_path(weights, start, goal, allow_diagonal=False):
         path_idx = paths[path_idx]
 
     if coordinates:
+        coordinates.append(np.unravel_index(start_idx, (height, width)))
         return np.vstack(coordinates[::-1])
     else:
         return np.array([])
