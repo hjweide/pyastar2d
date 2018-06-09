@@ -54,6 +54,15 @@ sys 0m2.273s
 The solution is visualized below:
 <img src="solns/maze_large_soln.png" alt="Maze Large Solution" style="width: 100%"/>
 
+## Tests
+To run the tests, simply run ```py.test``` in the ```tests``` directory.
+```
+cd tests
+py.test
+```
+The tests are fairly basic but cover some of the more common pitfalls.  Pull
+requests for more extensive tests are welcome.
+
 ## References
 1. [A\* search algorithm on Wikipedia](https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode)
 2. [Pathfinding with A* on Red Blob Games](http://www.redblobgames.com/pathfinding/a-star/introduction.html)
