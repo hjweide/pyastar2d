@@ -20,7 +20,7 @@ astar.argtypes = [ndmat_f_type, ctypes.c_int, ctypes.c_int,
 
 def astar_path(weights, start, goal, allow_diagonal=False):
     if weights.min(axis=None) < 1.:
-        raise ValueError('Minimum cost to move must be 1, but got %.f' % (
+        raise ValueError('Minimum cost to move must be 1, but got %f' % (
             weights.min(axis=None)))
     height, width = weights.shape
     start_idx = np.ravel_multi_index(start, (height, width))
