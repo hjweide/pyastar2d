@@ -1,7 +1,11 @@
 import ctypes
 import numpy as np
 
-lib = ctypes.cdll.LoadLibrary('astar.so')
+import inspect
+from os.path import abspath, dirname, join
+
+fname = abspath(inspect.getfile(inspect.currentframe()))
+lib = ctypes.cdll.LoadLibrary(join(dirname(fname), 'astar.so'))
 
 astar = lib.astar
 ndmat_f_type = np.ctypeslib.ndpointer(
@@ -15,8 +19,9 @@ astar.argtypes = [ndmat_f_type, ctypes.c_int, ctypes.c_int,
 
 
 def astar_path(weights, start, goal, allow_diagonal=False):
-    assert weights.min(axis=None) >= 1., (
-        'weights.min() = %.2f != 1' % weights.min(axis=None))
+    if weights.min(axis=None) < 1.:
+        raise ValueError('Minimum cost to move must be 1, but got %.f' % (
+            weights.min(axis=None)))
     height, width = weights.shape
     start_idx = np.ravel_multi_index(start, (height, width))
     goal_idx = np.ravel_multi_index(goal, (height, width))
