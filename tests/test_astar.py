@@ -89,3 +89,33 @@ def test_bad_heuristic():
     with pytest.raises(ValueError) as exc:
         pyastar.astar_path(weights, (0, 0), (9, 9))
         assert '.f' % bad_cost in exc.value.args[0]
+
+
+def test_invalid_start_and_goal():
+    weights = (1. + 5. * np.random.random((10, 10))).astype(np.float32)
+    # Test bad start indices.
+    with pytest.raises(ValueError) as exc:
+        pyastar.astar_path(weights, (-1, 0), (9, 9))
+        assert '-1' in exc.value.args[0]
+    with pytest.raises(ValueError) as exc:
+        pyastar.astar_path(weights, (10, 0), (9, 9))
+        assert '10' in exc.value.args[0]
+    with pytest.raises(ValueError) as exc:
+        pyastar.astar_path(weights, (0, -1), (9, 9))
+        assert '-1' in exc.value.args[0]
+    with pytest.raises(ValueError) as exc:
+        pyastar.astar_path(weights, (0, 10), (9, 9))
+        assert '10' in exc.value.args[0]
+    # Test bad goal indices.
+    with pytest.raises(ValueError) as exc:
+        pyastar.astar_path(weights, (0, 0), (-1, 9))
+        assert '-1' in exc.value.args[0]
+    with pytest.raises(ValueError) as exc:
+        pyastar.astar_path(weights, (0, 0), (10, 9))
+        assert '10' in exc.value.args[0]
+    with pytest.raises(ValueError) as exc:
+        pyastar.astar_path(weights, (0, 0), (0, -1))
+        assert '-1' in exc.value.args[0]
+    with pytest.raises(ValueError) as exc:
+        pyastar.astar_path(weights, (0, 0), (0, 10))
+        assert '10' in exc.value.args[0]
