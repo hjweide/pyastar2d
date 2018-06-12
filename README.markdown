@@ -11,9 +11,26 @@ construct the graph can be expensive.  Considering that my use case was
 so simple, I decided to implement it myself.
 
 ## Usage
-1. Run ```make``` to build the shared object file ```astar.so```.
-2. Set the ```MAZE_FPATH``` and ```OUTP_FPATH``` as desired in ```examples.py```.
-3. Run ```python examples.py```.
+Run ```make``` to build the shared object file ```astar.so```.
+``` python
+import numpy as np
+import pyastar
+# The minimum cost must be 1 for the heuristic to be valid.
+weights = np.array([[1, 3, 3, 3, 3],
+                    [2, 1, 3, 3, 3],
+                    [2, 2, 1, 3, 3],
+                    [2, 2, 2, 1, 3],
+                    [2, 2, 2, 2, 1]], dtype=np.float32)
+# The start and goal coordinates are in matrix coordinates (i, j).
+path = pyastar.astar_path(weights, (0, 0), (4, 4), allow_diagonal=True)
+print(path)
+# The path is returned as a numpy array of (i, j) coordinates.
+array([[0, 0],
+       [1, 1],
+       [2, 2],
+       [3, 3],
+       [4, 4]])
+```
 
 ## Example Results
 To test the implementation, I grabbed two nasty mazes from Wikipedia.  They are
@@ -23,8 +40,13 @@ included in the ```mazes``` directory, but are originally from here:
 I load the ```.png``` files as grayscale images, and set the white pixels to 1
 (open space) and the black pixels to ```INF``` (walls).
 
-Run the code on the small maze:
-```
+To run the examples:
+1. Run ```make``` to build the shared object file ```astar.so```.
+2. Set the ```MAZE_FPATH``` and ```OUTP_FPATH``` as desired in ```examples.py```.
+3. Run ```python examples.py```.
+
+Output for the small maze:
+``` bash
 time python examples.py
 loaded maze of shape (1802, 1802)
 found path of length 10032 in 0.258270s
@@ -39,7 +61,7 @@ sys 0m1.691s
 The solution is visualized below:
 <img src="solns/maze_small_soln.png" alt="Maze Small Solution" style="width: 100%"/>
 
-Run the code on the large maze:
+Output for the large maze:
 ```
 loaded maze of shape (4002, 4002)
 found path of length 783737 in 3.886067s
