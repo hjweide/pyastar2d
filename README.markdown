@@ -46,7 +46,7 @@ To run the examples:
 3. Run ```python examples.py```.
 
 Output for the small maze:
-``` bash
+```
 time python examples.py
 loaded maze of shape (1802, 1802)
 found path of length 10032 in 0.258270s
@@ -63,6 +63,7 @@ The solution is visualized below:
 
 Output for the large maze:
 ```
+time python examples.py
 loaded maze of shape (4002, 4002)
 found path of length 783737 in 3.886067s
 plotting path to solns/maze_large_soln.png
