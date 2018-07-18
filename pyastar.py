@@ -24,11 +24,11 @@ def astar_path(weights, start, goal, allow_diagonal=False):
         raise ValueError('Minimum cost to move must be 1, but got %f' % (
             weights.min(axis=None)))
     # Ensure start is within bounds.
-    if (start < 0 or start[0] >= weights.shape[0] or
+    if (start[0] < 0 or start[0] >= weights.shape[0] or
             start[1] < 0 or start[1] >= weights.shape[1]):
         raise ValueError('Start of (%d, %d) lies outside grid.' % (start))
     # Ensure goal is within bounds.
-    if (goal < 0 or goal[0] >= weights.shape[0] or
+    if (goal[0] < 0 or goal[0] >= weights.shape[0] or
             goal[1] < 0 or goal[1] >= weights.shape[1]):
         raise ValueError('Goal of (%d, %d) lies outside grid.' % (goal))
 
