@@ -1,14 +1,21 @@
 #include <queue>
 #include <limits>
 #include <cmath>
+#include <Python.h>
+#include <numpy/arrayobject.h>
+#include <iostream>
+
+
+const float INF = std::numeric_limits<float>::infinity();
 
 // represents a single pixel
 class Node {
   public:
-    int idx;     // index in the flattened grid
-    float cost;  // cost of traversing this pixel
+    int idx; // index in the flattened grid
+    float cost; // cost of traversing this pixel
+    int path_length; // the length of the path to reach this node
 
-    Node(int i, float c) : idx(i),cost(c) {}
+    Node(int i, float c, int path_length) : idx(i), cost(c), path_length(path_length) {}
 };
 
 // the top of the priority queue is the greatest element by default,
@@ -17,36 +24,46 @@ bool operator<(const Node &n1, const Node &n2) {
   return n1.cost > n2.cost;
 }
 
-bool operator==(const Node &n1, const Node &n2) {
-  return n1.idx == n2.idx;
-}
-
 // See for various grid heuristics:
 // http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html#S7
 // L_\inf norm (diagonal distance)
-float linf_norm(int i0, int j0, int i1, int j1) {
+inline float linf_norm(int i0, int j0, int i1, int j1) {
   return std::max(std::abs(i0 - i1), std::abs(j0 - j1));
 }
 
 // L_1 norm (manhattan distance)
-float l1_norm(int i0, int j0, int i1, int j1) {
+inline float l1_norm(int i0, int j0, int i1, int j1) {
   return std::abs(i0 - i1) + std::abs(j0 - j1);
 }
+
 
 // weights:        flattened h x w grid of costs
 // h, w:           height and width of grid
 // start, goal:    index of start/goal in flattened grid
 // diag_ok:        if true, allows diagonal moves (8-conn.)
 // paths (output): for each node, stores previous node in path
-extern "C" bool astar(
-      const float* weights, const int h, const int w,
-      const int start, const int goal, bool diag_ok,
-      int* paths) {
+//extern "C" bool astar(
+static PyObject *astar(PyObject *self, PyObject *args) {
+  const PyArrayObject* weights_object;
+  int h;
+  int w;
+  int start;
+  int goal;
+  int diag_ok;
 
-  const float INF = std::numeric_limits<float>::infinity();
+  if (!PyArg_ParseTuple(
+        args, "Oiiiii", // i = int, O = object
+        &weights_object,
+        &h, &w,
+        &start, &goal,
+        &diag_ok))
+    return NULL;
 
-  Node start_node(start, 0.);
-  Node goal_node(goal, 0.);
+  float* weights = (float*) weights_object->data;
+  int* paths = new int[h * w];
+  int path_length = -1;
+
+  Node start_node(start, 0., 1);
 
   float* costs = new float[h * w];
   for (int i = 0; i < h * w; ++i)
@@ -58,13 +75,12 @@ extern "C" bool astar(
 
   int* nbrs = new int[8];
 
-  bool solution_found = false;
   while (!nodes_to_visit.empty()) {
     // .top() doesn't actually remove the node
     Node cur = nodes_to_visit.top();
 
-    if (cur == goal_node) {
-      solution_found = true;
+    if (cur.idx == goal) {
+      path_length = cur.path_length;
       break;
     }
 
@@ -100,7 +116,7 @@ extern "C" bool astar(
 
           // paths with lower expected cost are explored first
           float priority = new_cost + heuristic_cost;
-          nodes_to_visit.push(Node(nbrs[i], priority));
+          nodes_to_visit.push(Node(nbrs[i], priority, cur.path_length + 1));
 
           costs[nbrs[i]] = new_cost;
           paths[nbrs[i]] = cur.idx;
@@ -109,8 +125,45 @@ extern "C" bool astar(
     }
   }
 
+  PyObject *return_val;
+  if (path_length >= 0) {
+    npy_intp dims[2] = {path_length, 2};
+    PyArrayObject* path = (PyArrayObject*) PyArray_SimpleNew(2, dims, NPY_INT32);
+    npy_int32 *iptr, *jptr;
+    int idx = goal;
+    for (npy_intp i = dims[0] - 1; i >= 0; --i) {
+        iptr = (npy_int32*) (path->data + i * path->strides[0]);
+        jptr = (npy_int32*) (path->data + i * path->strides[0] + path->strides[1]);
+
+        *iptr = idx / w;
+        *jptr = idx % w;
+
+        idx = paths[idx];
+    }
+
+    return_val = PyArray_Return(path);
+  }
+  else {
+    return_val = Py_BuildValue(""); // no soln --> return None
+  }
+
   delete[] costs;
   delete[] nbrs;
+  delete[] paths;
 
-  return solution_found;
+  return return_val;
+}
+
+static PyMethodDef astar_methods[] = {
+    {"astar", (PyCFunction)astar, METH_VARARGS, "astar"},
+    {NULL, NULL, 0, NULL}
+};
+
+static struct PyModuleDef astar_module = {
+    PyModuleDef_HEAD_INIT,"astar", NULL, -1, astar_methods
+};
+
+PyMODINIT_FUNC PyInit_astar(void) {
+  import_array();
+  return PyModule_Create(&astar_module);
 }
