@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/hjweide/a-star.svg?branch=master)](https://travis-ci.org/hjweide/a-star)
-[![Coverage Status](https://coveralls.io/repos/github/hjweide/a-star/badge.svg?branch=release)](https://coveralls.io/github/hjweide/a-star?branch=master)
+[![Build Status](https://travis-ci.org/hjweide/pyastar.svg?branch=master)](https://travis-ci.org/hjweide/pyastar)
+[![Coverage Status](https://coveralls.io/repos/github/hjweide/pyastar/badge.svg?branch=master)](https://coveralls.io/github/hjweide/pyastar?branch=master)
 # PyAstar
 This is a very simple C++ implementation of the A\* algorithm for pathfinding
 on a two-dimensional grid.  The solver itself is implemented in C++, but is
