@@ -32,7 +32,7 @@ To check that everything worked, run the example:
 ```bash
 python examples/example.py
 ```
-You could also Add it to your project, by adding this line to `requirements.txt` 
+You could also add it to your project, by adding this line to `requirements.txt`:
 ```bash
 pyastar @ git+git://github.com/hjweide/pyastar.git@master#egg=pyastar
 ```
