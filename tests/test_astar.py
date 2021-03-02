@@ -119,3 +119,10 @@ def test_invalid_start_and_goal():
     with pytest.raises(ValueError) as exc:
         pyastar.astar_path(weights, (0, 0), (0, 10))
         assert '10' in exc.value.args[0]
+
+
+def test_bad_weights_dtype():
+    weights = np.array([[1, 2, 3], [1, 2, 3], [1, 2, 3]], dtype=np.float64)
+    with pytest.raises(AssertionError) as exc:
+        pyastar.astar_path(weights, (0, 0), (2, 2))
+    assert "float64" in exc.value.args[0]

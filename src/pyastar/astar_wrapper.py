@@ -29,6 +29,9 @@ def astar_path(
         start: Tuple[int, int],
         goal: Tuple[int, int],
         allow_diagonal: bool = False) -> Union[np.ndarray, None]:
+    assert weights.dtype == np.float32, (
+        f"weights must have np.float32 data type, but has {weights.dtype}"
+    )
     # For the heuristic to be valid, each move must cost at least 1.
     if weights.min(axis=None) < 1.:
         raise ValueError("Minimum cost to move must be 1, but got %f" % (
