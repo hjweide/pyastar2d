@@ -42,7 +42,6 @@ inline float l1_norm(int i0, int j0, int i1, int j1) {
 // start, goal:    index of start/goal in flattened grid
 // diag_ok:        if true, allows diagonal moves (8-conn.)
 // paths (output): for each node, stores previous node in path
-//extern "C" bool astar(
 static PyObject *astar(PyObject *self, PyObject *args) {
   const PyArrayObject* weights_object;
   int h;

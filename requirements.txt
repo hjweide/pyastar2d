@@ -1,2 +1,2 @@
-imageio==2.8.0
-numpy==1.18.4
+imageio
+numpy
