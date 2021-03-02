@@ -43,6 +43,7 @@ A simple example is given below:
 import numpy as np
 import pyastar
 # The minimum cost must be 1 for the heuristic to be valid.
+# The weights array must have np.float32 dtype to be compatible with the C++ code.
 weights = np.array([[1, 3, 3, 3, 3],
                     [2, 1, 3, 3, 3],
                     [2, 2, 1, 3, 3],
