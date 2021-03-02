@@ -1,14 +1,12 @@
 import ctypes
 import numpy as np
 import pyastar.astar
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple
 
 
 # Define array types
 ndmat_f_type = np.ctypeslib.ndpointer(
     dtype=np.float32, ndim=1, flags="C_CONTIGUOUS")
-ndmat_i_type = np.ctypeslib.ndpointer(
-    dtype=np.int32, ndim=1, flags="C_CONTIGUOUS")
 ndmat_i2_type = np.ctypeslib.ndpointer(
     dtype=np.int32, ndim=2, flags="C_CONTIGUOUS")
 
@@ -28,7 +26,7 @@ def astar_path(
         weights: np.ndarray,
         start: Tuple[int, int],
         goal: Tuple[int, int],
-        allow_diagonal: bool = False) -> Union[np.ndarray, None]:
+        allow_diagonal: bool = False) -> Optional[np.ndarray]:
     assert weights.dtype == np.float32, (
         f"weights must have np.float32 data type, but has {weights.dtype}"
     )
