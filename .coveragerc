@@ -3,5 +3,5 @@ omit = tests/*
 
 [paths]
 source =
-    pyastar
-    **/site-packages/pyastar
+    pyastar2d
+    **/site-packages/pyastar2d
