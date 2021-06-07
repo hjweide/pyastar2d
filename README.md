@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/hjweide/pyastar.svg?branch=master)](https://travis-ci.org/hjweide/pyastar)
-[![Coverage Status](https://coveralls.io/repos/github/hjweide/pyastar/badge.svg?branch=master)](https://coveralls.io/github/hjweide/pyastar?branch=master)
-# PyAstar
+[![Build Status](https://travis-ci.org/hjweide/pyastar2d.svg?branch=master)](https://travis-ci.org/hjweide/pyastar2d)
+[![Coverage Status](https://coveralls.io/repos/github/hjweide/pyastar2d/badge.svg?branch=master)](https://coveralls.io/github/hjweide/pyastar2d?branch=master)
+# PyAstar2D
 This is a very simple C++ implementation of the A\* algorithm for pathfinding
 on a two-dimensional grid.  The solver itself is implemented in C++, but is
 callable from Python.  This combines the speed of C++ with the convenience of
@@ -12,7 +12,7 @@ nine-year-old Intel(R) Core(TM) i7-2630QM CPU @ 2.00GHz.  See [Example
 Results](#example-results) for more details.
 
 See `src/cpp/astar.cpp` for the core C++ implementation of the A\* shortest
-path search algorithm, `src/pyastar/astar_wrapper.py` for the Python wrapper
+path search algorithm, `src/pyastar2d/astar_wrapper.py` for the Python wrapper
 and `examples/example.py` for example usage.
 
 When determining legal moves, 4-connectivity is the default, but it is possible
@@ -32,16 +32,16 @@ To check that everything worked, run the example:
 ```bash
 python examples/example.py
 ```
-You could also add it to your project, by adding this line to `requirements.txt`:
+You could also add it to your project by adding this line to `requirements.txt`:
 ```bash
-pyastar @ git+git://github.com/hjweide/pyastar.git@master#egg=pyastar
+pyastar2d @ git+git://github.com/hjweide/pyastar2d.git@master#egg=pyastar2d
 ```
 
 ## Usage
 A simple example is given below:
 ```python
 import numpy as np
-import pyastar
+import pyastar2d
 # The minimum cost must be 1 for the heuristic to be valid.
 # The weights array must have np.float32 dtype to be compatible with the C++ code.
 weights = np.array([[1, 3, 3, 3, 3],
@@ -50,7 +50,7 @@ weights = np.array([[1, 3, 3, 3, 3],
                     [2, 2, 2, 1, 3],
                     [2, 2, 2, 2, 1]], dtype=np.float32)
 # The start and goal coordinates are in matrix coordinates (i, j).
-path = pyastar.astar_path(weights, (0, 0), (4, 4), allow_diagonal=True)
+path = pyastar2d.astar_path(weights, (0, 0), (4, 4), allow_diagonal=True)
 print(path)
 # The path is returned as a numpy array of (i, j) coordinates.
 array([[0, 0],
@@ -60,7 +60,7 @@ array([[0, 0],
        [4, 4]])
 ```
 Note that all grid points are represented as `(i, j)` coordinates.  An example
-of using `pyastar` to solve a maze is given in `examples/maze_solver.py`.
+of using `pyastar2d` to solve a maze is given in `examples/maze_solver.py`.
 
 ## Example Results
 <a name="example-results"></a>

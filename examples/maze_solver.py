@@ -3,14 +3,14 @@ import numpy as np
 import imageio
 import time
 
-import pyastar
+import pyastar2d
 
 from os.path import basename, join
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        "An example of using pyastar to find the solution to a maze"
+        "An example of using pyastar2d to find the solution to a maze"
     )
     parser.add_argument(
         "--input", type=str, default="mazes/maze_small.png",

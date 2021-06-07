@@ -1,6 +1,6 @@
 import ctypes
 import numpy as np
-import pyastar.astar
+import pyastar2d.astar
 from typing import Optional, Tuple
 
 
@@ -11,8 +11,8 @@ ndmat_i2_type = np.ctypeslib.ndpointer(
     dtype=np.int32, ndim=2, flags="C_CONTIGUOUS")
 
 # Define input/output types
-pyastar.astar.restype = ndmat_i2_type  # Nx2 (i, j) coordinates or None
-pyastar.astar.argtypes = [
+pyastar2d.astar.restype = ndmat_i2_type  # Nx2 (i, j) coordinates or None
+pyastar2d.astar.argtypes = [
     ndmat_f_type,   # weights
     ctypes.c_int,   # height
     ctypes.c_int,   # width
@@ -47,7 +47,7 @@ def astar_path(
     start_idx = np.ravel_multi_index(start, (height, width))
     goal_idx = np.ravel_multi_index(goal, (height, width))
 
-    path = pyastar.astar.astar(
+    path = pyastar2d.astar.astar(
         weights.flatten(), height, width, start_idx, goal_idx, allow_diagonal,
     )
     return path

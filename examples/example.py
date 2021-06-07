@@ -1,5 +1,5 @@
 import numpy as np
-import pyastar
+import pyastar2d
 
 
 # The start and goal coordinates are in matrix coordinates (i, j).
@@ -14,7 +14,7 @@ weights = np.array([[1, 3, 3, 3, 3],
                     [2, 2, 2, 2, 1]], dtype=np.float32)
 print("Cost matrix:")
 print(weights)
-path = pyastar.astar_path(weights, start, goal, allow_diagonal=True)
+path = pyastar2d.astar_path(weights, start, goal, allow_diagonal=True)
 
 # The path is returned as a numpy array of (i, j) coordinates.
 print(f"Shortest path from {start} to {goal} found:")
