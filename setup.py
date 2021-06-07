@@ -15,7 +15,7 @@ class build_ext(_build_ext):
 
 
 astar_module = Extension(
-    'pyastar.astar', sources=['src/cpp/astar.cpp'],
+    'pyastar2d.astar', sources=['src/cpp/astar.cpp'],
     extra_compile_args=["-O3", "-Wall", "-shared", "-fpic"],
 )
 
@@ -27,8 +27,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="pyastar",
-    version="0.0.1",
+    name="pyastar2d",
+    version="1.0.0",
     author="Hendrik Weideman",
     author_email="hjweide@gmail.com",
     description=(
@@ -36,7 +36,7 @@ setuptools.setup(
         "path-finding on a two-dimensional grid."),
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/hjweide/a-star",
+    url="https://github.com/hjweide/pyastar2d",
     cmdclass={"build_ext": build_ext},
     setup_requires=["wheel", "numpy"],
     install_requires=install_requires,
