@@ -19,7 +19,17 @@ When determining legal moves, 4-connectivity is the default, but it is possible
 to set `allow_diagonal=True` for 8-connectivity.
 
 ## Installation
-If running on Linux or MacOS, simply run
+Instructions for installing `pyastar2d` are given below.
+
+### From PyPI
+The easiest way to install `pyastar2d` is directly from the Python package index:
+```
+pip install pyastar2d
+```
+
+### From source
+You can also install `pyastar2d` by cloning this repository and building it
+yourself.  If running on Linux or MacOS, simply run
 ```bash
 pip install .
 ````
@@ -32,8 +42,11 @@ To check that everything worked, run the example:
 ```bash
 python examples/example.py
 ```
-You could also add it to your project by adding this line to `requirements.txt`:
-```bash
+
+### As a dependency
+Include `pyastar2d` in your `requirements.txt` to install from `pypi`, or add
+this line to `requirements.txt`:
+```
 pyastar2d @ git+git://github.com/hjweide/pyastar2d.git@master#egg=pyastar2d
 ```
 
@@ -91,8 +104,8 @@ real	0m1.214s
 user	0m1.526s
 sys	0m0.606s
 ```
-The solution is visualized below:
-<img src="solns/maze_small_soln.png" alt="Maze Small Solution" style="width: 100%"/>
+The solution found for the small maze is shown below:
+<img src="https://github.com/hjweide/pyastar2d/raw/master/solns/maze_small_soln.png" alt="Maze Small Solution" style="width: 100%"/>
 
 ### Large Maze (4002 x 4002): 
 ```bash
@@ -106,8 +119,8 @@ real	0m29.385s
 user	0m29.563s
 sys	0m0.728s
 ```
-The solution is visualized below:
-<img src="solns/maze_large_soln.png" alt="Maze Large Solution" style="width: 100%"/>
+The solution found for the large maze is shown below:
+<img src="https://github.com/hjweide/pyastar2d/raw/master/solns/maze_large_soln.png" alt="Maze Large Solution" style="width: 100%"/>
 
 ## Motivation
 I recently needed an implementation of the A* algorithm in Python to find the
