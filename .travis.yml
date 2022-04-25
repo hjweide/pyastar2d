@@ -1,75 +1,17 @@
-os: linux
-dist: focal
 language: python
 python:
-  - 3.8
-
-# cibuildwheel example: https://github.com/pypa/cibuildwheel/blob/main/examples/travis-ci-test-and-deploy.yml
+  - "3.7"
 before_install:
-  - |
-    if [[ "$TRAVIS_OS_NAME" = windows ]]; then
-        choco upgrade python -y --version 3.8.6
-        export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
-        # make sure it's on PATH as 'python3'
-        ln -s /c/Python38/python.exe /c/Python38/python3.exe
-    fi
-
+  - pip install -U pip
 # command to install dependencies
 install:
-  - python3 -m pip install -U pip
-  - python3 -m pip install -r requirements-dev.txt
-  - python3 -m pip install coveralls  # python-coveralls leads to this issue: https://github.com/z4r/python-coveralls/issues/73
-  - python3 -m pip install .
-
+  - pip install -r requirements-dev.txt
+  - pip install coveralls  # python-coveralls leads to this issue: https://github.com/z4r/python-coveralls/issues/73
+  - pip install .
 # command to run tests
 script:
   - pytest --cov pyastar2d --cov-report term-missing
-
 after_success:
   - coveralls
-
-stages:
-  - test
-  # Only execute deployment stage on tagged commits, and from your repository
-  # (e.g. not PRs). Replace with your repo name.
-  - name: deploy
-    if: tag IS PRESENT AND repo = hjweide/pyastar2d
-    # To only build tags that look like vX.Y.Z:
-    #   if: tag =~ ^v\d+\.\d+\.\d+$ AND repo = pypa/cibuildwheel
-
-jobs:
-  include:
-    # Optional: run a test on Windows
-    - os: windows
-      language: shell
-      name: Test on Windows
-
-    # Deploy source distribution
-    - stage: deploy
-      name: Deploy source distribution
-      install: python3 -m pip install -r requirements.txt build twine
-      script: python3 -m build --sdist --config-setting=--formats=gztar
-      after_success: python3 -m twine upload --skip-existing dist/*.tar.gz
-    # Deploy on linux
-    - stage: deploy
-      name: Build and deploy Linux wheels
-      services: docker
-      install: python3 -m pip install -r requirements.txt cibuildwheel==2.4.0 twine
-      script: python3 -m cibuildwheel --output-dir wheelhouse
-      after_success: python3 -m twine upload --skip-existing wheelhouse/*.whl
-    # Deploy on windows
-    - stage: deploy
-      name: Build and deploy Windows wheels
-      os: windows
-      language: shell
-      install: python3 -m pip install -r requirements.txt cibuildwheel==2.4.0 twine
-      script: python3 -m cibuildwheel --output-dir wheelhouse
-      after_success: python3 -m twine upload --skip-existing wheelhouse/*.whl
-
-env:
-  global:
-    - TWINE_USERNAME=__token__
-    # Note: TWINE_PASSWORD is set to a PyPI API token in Travis settings
-
 notifications:
   email: false
