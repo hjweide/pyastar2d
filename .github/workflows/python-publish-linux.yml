@@ -46,5 +46,5 @@ jobs:
         #TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
       run: |
-          #python -m twine upload --repository testpypi dist/*-manylinux*.whl --verbose --skip-existing
-          python -m twine upload dist/*-manylinux*.whl --verbose --skip-existing
+        #python -m twine upload --repository testpypi dist/*-manylinux*.whl --verbose --skip-existing
+        python -m twine upload dist/*-manylinux*.whl --verbose --skip-existing
