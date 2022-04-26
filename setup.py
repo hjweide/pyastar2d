@@ -1,21 +1,12 @@
 import setuptools
 from distutils.core import Extension
-
-from setuptools.command.build_ext import build_ext as _build_ext
-
-
-# https://stackoverflow.com/a/21621689/
-class build_ext(_build_ext):
-    def finalize_options(self):
-        _build_ext.finalize_options(self)
-        # Prevent numpy from thinking it is still in its setup process:
-        __builtins__.__NUMPY_SETUP__ = False
-        import numpy
-        self.include_dirs.append(numpy.get_include())
-
+from setuptools import dist
+dist.Distribution().fetch_build_eggs(["numpy"])
+import numpy
 
 astar_module = Extension(
     'pyastar2d.astar', sources=['src/cpp/astar.cpp'],
+    include_dirs=[numpy.get_include()],  # for numpy/arrayobject.h
     extra_compile_args=["-O3", "-Wall", "-shared", "-fpic"],
 )
 
@@ -28,7 +19,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyastar2d",
-    version="1.0.2",
+    version="1.0.3",
     author="Hendrik Weideman",
     author_email="hjweide@gmail.com",
     description=(
@@ -37,8 +28,6 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/hjweide/pyastar2d",
-    cmdclass={"build_ext": build_ext},
-    setup_requires=["wheel", "numpy"],
     install_requires=install_requires,
     packages=setuptools.find_packages(where="src", exclude=("tests",)),
     package_dir={"": "src"},
@@ -48,5 +37,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
 )
