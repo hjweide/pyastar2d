@@ -42,7 +42,7 @@ jobs:
         build-requirements: 'numpy'
     - name: Build source distribution
       run: |
-        python -m pip install build
+        python -m pip install build --user
         python -m build --sdist
     - name: Publish distribution 📦 to Test PyPI
       env:
