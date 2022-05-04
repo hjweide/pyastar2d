@@ -125,3 +125,38 @@ def test_bad_weights_dtype():
     with pytest.raises(AssertionError) as exc:
         pyastar2d.astar_path(weights, (0, 0), (2, 2))
     assert "float64" in exc.value.args[0]
+
+
+def test_orthogonal_x():
+    weights = np.ones((5, 5), dtype=np.float32)
+    # Run x
+    path = pyastar2d.astar_path(weights, (0, 0), (4, 4), allow_diagonal=False, heuristic_override=3)
+    expected = np.array([[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [4, 1], [4, 2], [4, 3], [4, 4]])
+
+    assert np.all(path == expected)
+    
+    
+def test_orthogonal_y():
+    weights = np.ones((5, 5), dtype=np.float32)
+    # Run y
+    path = pyastar2d.astar_path(weights, (0, 0), (4, 4), allow_diagonal=False, heuristic_override=4)
+    expected = np.array([[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [1, 4], [2, 4], [3, 4], [4, 4]])
+
+    assert np.all(path == expected)
+
+def test_tiebreaker_coefficient():
+    weights = np.array([[1, 1, 1, 1, 1, 1, 1],
+                         [1, 1, 1, np.inf, 1, 1, 1],
+                         [1, 1, 1, np.inf, 1, 1, 1],
+                         [1, 1, 1, np.inf, 1, 1, 1],
+                         [1, 1, 1, np.inf, 1, 1, 1],
+                         [1, 1, 1, np.inf, 1, 1, 1],
+                         [1, 1, 1, 1, 1, 1, 1]], dtype=np.float32)
+    weights = weights.T
+    path = pyastar2d.astar_path(weights, (0, 3), (6, 3), allow_diagonal=False, tiebreaker_coefficient=10000)
+    expected = np.array([[0, 3], [1, 3], [2, 3], [2, 4],
+                         [2, 5], [2, 6], [3, 6], [4, 6],
+                         [4, 5], [4, 4], [4, 3], [5, 3],
+                         [6, 3]])
+
+    assert np.all(path == expected)
