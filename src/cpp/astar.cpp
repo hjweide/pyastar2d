@@ -68,10 +68,10 @@ static PyObject *astar(PyObject *self, PyObject *args) {
   int goal;
   int diag_ok;
   int heuristic_override;
-  int tiebreaker_coefficient;
+  float tiebreaker_coefficient;
 
   if (!PyArg_ParseTuple(
-        args, "Oiiiiiii", // i = int, O = object
+        args, "Oiiiiiif", // i = int, O = object
         &weights_object,
         &h, &w,
         &start, &goal,
@@ -149,9 +149,9 @@ static PyObject *astar(PyObject *self, PyObject *args) {
                                           goal    / w, goal    % w);
                                        
           // add tiebreaker cost
-          if (tiebreaker_coefficient > 0) {
+          if (tiebreaker_coefficient > 0.0f) {
             heuristic_cost = heuristic_cost + 
-                tiebreaker_coefficient/1000.0f * tie_breaker_func(nbrs[i] / w, nbrs[i] % w,
+                tiebreaker_coefficient * tie_breaker_func(nbrs[i] / w, nbrs[i] % w,
                                                                goal    / w, goal    % w,
                                                                start   / w, start   % w);
           }

@@ -20,7 +20,7 @@ pyastar2d.astar.argtypes = [
     ctypes.c_int,   # goal index in flattened grid
     ctypes.c_bool,  # allow diagonal
     ctypes.c_int,   # heuristic_override
-    ctypes.c_int,   # tiebreaker_coefficient
+    ctypes.c_float, # tiebreaker_coefficient
 ]
 
 
@@ -30,7 +30,7 @@ def astar_path(
         goal: Tuple[int, int],
         allow_diagonal: bool = False,
         heuristic_override: int = 0,
-        tiebreaker_coefficient: int = 0) -> Optional[np.ndarray]:
+        tiebreaker_coefficient: float = 0.0) -> Optional[np.ndarray]:
     """
     Run astar algorithm on 2d weights.
     
@@ -39,7 +39,9 @@ def astar_path(
     param Tuple[int, int] goal: (x, y) point to end
     param bool allow_diagonal: Whether to allow diagonal moves
     param int heuristic_override: Override heuristic 0=auto, 1=diagonal, 2=manhattan, 3=orthogonal-x, 4=orthogonal-y
-    param int tiebreaker_coefficient: Add tiebreaker to heuristic cost, 0=disable, positive enables it by that amount/1000.0
+    param float tiebreaker_coefficient: Add tiebreaker to heuristic cost, 0=disable, positive enables it by that amount/1000.0
+    
+    Important: Please take care when using heuristic_override and tiebreaker_coefficient, they may not take the shortest path.
     """
     assert weights.dtype == np.float32, (
         f"weights must have np.float32 data type, but has {weights.dtype}"
