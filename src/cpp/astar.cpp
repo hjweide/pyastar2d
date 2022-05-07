@@ -40,7 +40,7 @@ inline float l1_norm(int current_x, int current_y, int goal_x, int goal_y, int m
 inline float l1_orthogonal_x(int current_x, int current_y, int goal_x, int goal_y, int max_x, int max_y) {
   int dx = std::abs(current_x - goal_x);
   if (dx > (max_x * 0.5)) {
-    return dx;
+    return dx + max_y;
   } else {
     return std::abs(current_y - goal_y);
   }
@@ -50,7 +50,7 @@ inline float l1_orthogonal_x(int current_x, int current_y, int goal_x, int goal_
 inline float l1_orthogonal_y(int current_x, int current_y, int goal_x, int goal_y, int max_x, int max_y) {
   int dy = std::abs(current_y - goal_y);
   if (dy > (max_y * 0.5)) {
-    return dy;
+    return dy + max_x;
   } else {
     return std::abs(current_x - goal_x);
   }
