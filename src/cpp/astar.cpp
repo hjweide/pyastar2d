@@ -104,7 +104,7 @@ static PyObject *astar(PyObject *self, PyObject *args) {
   // Get the heuristic method to use
   float (*heuristic_func)(int, int, int, int, int, int);
   
-  if (heuristic_override == Heuristic::DEFAULT) {
+  if (heuristic_override == DEFAULT) {
     if (diag_ok) {
       heuristic_func = linf_norm;
     } else {
@@ -112,16 +112,16 @@ static PyObject *astar(PyObject *self, PyObject *args) {
     }
   } else {
     switch(heuristic_override) {
-      case Heuristic::DIAGONAL_DISTANCE:
+      case DIAGONAL_DISTANCE:
         heuristic_func = linf_norm;
         break;
-      case Heuristic::MANHATTAN_DISTANCE:
+      case MANHATTAN_DISTANCE:
         heuristic_func = l1_norm;
         break;
-      case Heuristic::ORTHOGONAL_X:
+      case ORTHOGONAL_X:
         heuristic_func = orthogonal_x;
         break;
-      case Heuristic::ORTHOGONAL_Y:
+      case ORTHOGONAL_Y:
         heuristic_func = orthogonal_y;
         break;
       default:
