@@ -1,6 +1,7 @@
 import ctypes
 import numpy as np
 import pyastar2d.astar
+from enum import IntEnum
 from typing import Optional, Tuple
 
 
@@ -20,17 +21,23 @@ pyastar2d.astar.argtypes = [
     ctypes.c_int,   # goal index in flattened grid
     ctypes.c_bool,  # allow diagonal
     ctypes.c_int,   # heuristic_override
-    ctypes.c_float, # tiebreaker_coefficient
 ]
 
+class Heuristic(IntEnum):
+    """The supported heuristics."""
+    
+    default = 0
+    diagonal_distance = 1
+    manhattan_distance = 2
+    orthogonal_x = 3
+    orthogonal_y = 4
 
 def astar_path(
         weights: np.ndarray,
         start: Tuple[int, int],
         goal: Tuple[int, int],
         allow_diagonal: bool = False,
-        heuristic_override: int = 0,
-        tiebreaker_coefficient: float = 0.0) -> Optional[np.ndarray]:
+        heuristic_override: Heuristic = Heuristic.default) -> Optional[np.ndarray]:
     """
     Run astar algorithm on 2d weights.
 
@@ -38,10 +45,8 @@ def astar_path(
     param Tuple[int, int] start: (x, y) point to start
     param Tuple[int, int] goal: (x, y) point to end
     param bool allow_diagonal: Whether to allow diagonal moves
-    param int heuristic_override: Override heuristic 0=auto, 1=diagonal, 2=manhattan, 3=orthogonal-x, 4=orthogonal-y
-    param float tiebreaker_coefficient: Add tiebreaker to heuristic cost, 0=disable, positive enables it by that amount
+    param Heuristic heuristic_override: Override heuristic, see Heuristic(IntEnum)
 
-    Important: Please take care when using heuristic_override and tiebreaker_coefficient, they may not take the shortest path.
     """
     assert weights.dtype == np.float32, (
         f"weights must have np.float32 data type, but has {weights.dtype}"
@@ -65,6 +70,6 @@ def astar_path(
 
     path = pyastar2d.astar.astar(
         weights.flatten(), height, width, start_idx, goal_idx, allow_diagonal,
-        heuristic_override, tiebreaker_coefficient
+        int(heuristic_override)
     )
     return path

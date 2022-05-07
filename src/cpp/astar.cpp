@@ -24,35 +24,41 @@ bool operator<(const Node &n1, const Node &n2) {
   return n1.cost > n2.cost;
 }
 
+enum Heuristic { default, diagonal_distance, manhattan_distance, orthogonal_x, orthogonal_y };
+
 // See for various grid heuristics:
 // http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html#S7
 // L_\inf norm (diagonal distance)
-inline float linf_norm(int current_x, int current_y, int goal_x, int goal_y, int max_x, int max_y) {
-  return std::max(std::abs(current_x - goal_x), std::abs(current_y - goal_y));
+inline float linf_norm(int i0, int j0, int i1, int j1, int, int) {
+  return std::max(std::abs(i0 - i1), std::abs(j0 - j1));
 }
 
 // L_1 norm (manhattan distance)
-inline float l1_norm(int current_x, int current_y, int goal_x, int goal_y, int max_x, int max_y) {
-  return std::abs(current_x - goal_x) + std::abs(current_y - goal_y);
+inline float l1_norm(int i0, int j0, int i1, int j1, int, int) {
+  return std::abs(i0 - i1) + std::abs(j0 - j1);
 }
 
 // Orthogonal x (moves by x first, then half way by y)
-inline float l1_orthogonal_x(int current_x, int current_y, int goal_x, int goal_y, int max_x, int max_y) {
-  int dx = std::abs(current_x - goal_x);
-  if (dx > (max_x * 0.5)) {
-    return dx;
+inline float h_orthogonal_x(int i0, int j0, int i1, int j1, int i2, int j2) {
+  int di = std::abs(i0 - i1);
+  int dim = std::abs(i1 - i2);
+  int djm = std::abs(j1 - j2);
+  if (di > (dim * 0.5)) {
+    return di + djm;
   } else {
-    return std::abs(current_y - goal_y);
+    return std::abs(j0 - j1);
   }
 }
 
 // Orthogonal y (moves by y first, then half way by x)
-inline float l1_orthogonal_y(int current_x, int current_y, int goal_x, int goal_y, int max_x, int max_y) {
-  int dy = std::abs(current_y - goal_y);
-  if (dy > (max_y * 0.5)) {
-    return dy;
+inline float h_orthogonal_y(int i0, int j0, int i1, int j1, int i2, int j2) {
+  int dj = std::abs(j0 - j1);
+  int djm = std::abs(j1 - j2);
+  int dim = std::abs(i1 - i2);
+  if (dj > (djm * 0.5)) {
+    return dj + dim;
   } else {
-    return std::abs(current_x - goal_x);
+    return std::abs(i0 - i1);
   }
 }
 
@@ -69,15 +75,13 @@ static PyObject *astar(PyObject *self, PyObject *args) {
   int goal;
   int diag_ok;
   int heuristic_override;
-  float tiebreaker_coefficient;
 
   if (!PyArg_ParseTuple(
-        args, "Oiiiiiif", // i = int, O = object
+        args, "Oiiiiii", // i = int, O = object
         &weights_object,
         &h, &w,
         &start, &goal,
-        &diag_ok, &heuristic_override,
-        &tiebreaker_coefficient
+        &diag_ok, &heuristic_override
         ))
     return NULL;
 
@@ -100,25 +104,23 @@ static PyObject *astar(PyObject *self, PyObject *args) {
   // Get the heuristic method to use
   float (*heuristic_func)(int, int, int, int, int, int);
   
-  if (heuristic_override == 1) {
-    heuristic_func = linf_norm;
-  } else if (heuristic_override == 2) {
-    heuristic_func = l1_norm;
-  } else if (heuristic_override == 3) {
-    heuristic_func = l1_orthogonal_x;
-  } else if (heuristic_override == 4) {
-    heuristic_func = l1_orthogonal_y;
-  } else {  // default
+  if (heuristic_override == Heuristic::default) {
     if (diag_ok) {
       heuristic_func = linf_norm;
     } else {
       heuristic_func = l1_norm;
     }
+  } else {
+    if (heuristic_override == Heuristic::diagonal_distance) {
+      heuristic_func = linf_norm;
+    } else if (heuristic_override == Heuristic::manhattan_distance) {
+      heuristic_func = l1_norm;
+    } else if (heuristic_override == Heuristic::orthogonal_x) {
+      heuristic_func = h_orthogonal_x;
+    } else if (heuristic_override == Heuristic::orthogonal_y) {
+      heuristic_func = h_orthogonal_y;
+    }
   }
-  
-  // calculate max_x and max_y
-  int max_x = std::abs(goal / w - start / w);
-  int max_y = std::abs(goal % w - start % w);
 
   while (!nodes_to_visit.empty()) {
     // .top() doesn't actually remove the node
@@ -150,11 +152,9 @@ static PyObject *astar(PyObject *self, PyObject *args) {
         float new_cost = costs[cur.idx] + weights[nbrs[i]];
         if (new_cost < costs[nbrs[i]]) {
           // estimate the cost to the goal based on legal moves
-          // tiebreaker_coefficient can be changed to give different paths
-          heuristic_cost = (1 + tiebreaker_coefficient) * 
-                           heuristic_func(nbrs[i] / w, nbrs[i] % w,
+          heuristic_cost = heuristic_func(nbrs[i] / w, nbrs[i] % w,
                                           goal    / w, goal    % w,
-                                          max_x      , max_y);
+                                          start   / w, start   % w);
 
           // paths with lower expected cost are explored first
           float priority = new_cost + heuristic_cost;
