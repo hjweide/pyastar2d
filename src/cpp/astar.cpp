@@ -111,14 +111,21 @@ static PyObject *astar(PyObject *self, PyObject *args) {
       heuristic_func = l1_norm;
     }
   } else {
-    if (heuristic_override == Heuristic::DIAGONAL_DISTANCE) {
-      heuristic_func = linf_norm;
-    } else if (heuristic_override == Heuristic::MANHATTAN_DISTANCE) {
-      heuristic_func = l1_norm;
-    } else if (heuristic_override == Heuristic::ORTHOGONAL_X) {
-      heuristic_func = orthogonal_x;
-    } else if (heuristic_override == Heuristic::ORTHOGONAL_Y) {
-      heuristic_func = orthogonal_y;
+    switch(heuristic_override) {
+      case Heuristic::DIAGONAL_DISTANCE:
+        heuristic_func = linf_norm;
+        break;
+      case Heuristic::MANHATTAN_DISTANCE:
+        heuristic_func = l1_norm;
+        break;
+      case Heuristic::ORTHOGONAL_X:
+        heuristic_func = orthogonal_x;
+        break;
+      case Heuristic::ORTHOGONAL_Y:
+        heuristic_func = orthogonal_y;
+        break;
+      default:
+        return NULL;
     }
   }
 
