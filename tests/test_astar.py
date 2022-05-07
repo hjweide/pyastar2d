@@ -5,6 +5,8 @@ import os
 import sys
 import pyastar2d
 
+from pyastar2d import Heuristic
+
 
 def test_small():
     weights = np.array([[1, 3, 3, 3, 3],
@@ -129,7 +131,7 @@ def test_bad_weights_dtype():
 
 def test_orthogonal_x():
     weights = np.ones((5, 5), dtype=np.float32)
-    path = pyastar2d.astar_path(weights, (0, 0), (4, 4), allow_diagonal=False, heuristic_override=3)
+    path = pyastar2d.astar_path(weights, (0, 0), (4, 4), allow_diagonal=False, heuristic_override=Heuristic.ORTHOGONAL_X)
     expected = np.array([[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [3, 4], [4, 4]])
 
     assert np.all(path == expected)
@@ -137,7 +139,7 @@ def test_orthogonal_x():
     
 def test_orthogonal_y():
     weights = np.ones((5, 5), dtype=np.float32)
-    path = pyastar2d.astar_path(weights, (0, 0), (4, 4), allow_diagonal=False, heuristic_override=4)
+    path = pyastar2d.astar_path(weights, (0, 0), (4, 4), allow_diagonal=False, heuristic_override=Heuristic.ORTHOGONAL_Y)
     expected = np.array([[0, 0], [0, 1], [0, 2], [1, 2], [2, 2], [3, 2], [4, 2], [4, 3], [4, 4]])
 
     assert np.all(path == expected)
