@@ -24,7 +24,7 @@ bool operator<(const Node &n1, const Node &n2) {
   return n1.cost > n2.cost;
 }
 
-enum Heuristic { default, diagonal_distance, manhattan_distance, orthogonal_x, orthogonal_y };
+enum Heuristic { DEFAULT, DIAGONAL_DISTANCE, MANHATTAN_DISTANCE, ORTHOGONAL_X, ORTHOGONAL_Y };
 
 // See for various grid heuristics:
 // http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html#S7
@@ -39,7 +39,7 @@ inline float l1_norm(int i0, int j0, int i1, int j1, int, int) {
 }
 
 // Orthogonal x (moves by x first, then half way by y)
-inline float h_orthogonal_x(int i0, int j0, int i1, int j1, int i2, int j2) {
+inline float orthogonal_x(int i0, int j0, int i1, int j1, int i2, int j2) {
   int di = std::abs(i0 - i1);
   int dim = std::abs(i1 - i2);
   int djm = std::abs(j1 - j2);
@@ -51,7 +51,7 @@ inline float h_orthogonal_x(int i0, int j0, int i1, int j1, int i2, int j2) {
 }
 
 // Orthogonal y (moves by y first, then half way by x)
-inline float h_orthogonal_y(int i0, int j0, int i1, int j1, int i2, int j2) {
+inline float orthogonal_y(int i0, int j0, int i1, int j1, int i2, int j2) {
   int dj = std::abs(j0 - j1);
   int djm = std::abs(j1 - j2);
   int dim = std::abs(i1 - i2);
@@ -104,21 +104,21 @@ static PyObject *astar(PyObject *self, PyObject *args) {
   // Get the heuristic method to use
   float (*heuristic_func)(int, int, int, int, int, int);
   
-  if (heuristic_override == Heuristic::default) {
+  if (heuristic_override == Heuristic::DEFAULT) {
     if (diag_ok) {
       heuristic_func = linf_norm;
     } else {
       heuristic_func = l1_norm;
     }
   } else {
-    if (heuristic_override == Heuristic::diagonal_distance) {
+    if (heuristic_override == Heuristic::DIAGONAL_DISTANCE) {
       heuristic_func = linf_norm;
-    } else if (heuristic_override == Heuristic::manhattan_distance) {
+    } else if (heuristic_override == Heuristic::MANHATTAN_DISTANCE) {
       heuristic_func = l1_norm;
-    } else if (heuristic_override == Heuristic::orthogonal_x) {
-      heuristic_func = h_orthogonal_x;
-    } else if (heuristic_override == Heuristic::orthogonal_y) {
-      heuristic_func = h_orthogonal_y;
+    } else if (heuristic_override == Heuristic::ORTHOGONAL_X) {
+      heuristic_func = orthogonal_x;
+    } else if (heuristic_override == Heuristic::ORTHOGONAL_Y) {
+      heuristic_func = orthogonal_y;
     }
   }
 

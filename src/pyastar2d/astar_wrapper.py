@@ -25,19 +25,19 @@ pyastar2d.astar.argtypes = [
 
 class Heuristic(IntEnum):
     """The supported heuristics."""
-    
-    default = 0
-    diagonal_distance = 1
-    manhattan_distance = 2
-    orthogonal_x = 3
-    orthogonal_y = 4
+
+    DEFAULT = 0
+    DIAGONAL_DISTANCE = 1
+    MANHATTAN_DISTANCE = 2
+    ORTHOGONAL_X = 3
+    ORTHOGONAL_Y = 4
 
 def astar_path(
         weights: np.ndarray,
         start: Tuple[int, int],
         goal: Tuple[int, int],
         allow_diagonal: bool = False,
-        heuristic_override: Heuristic = Heuristic.default) -> Optional[np.ndarray]:
+        heuristic_override: Heuristic = Heuristic.DEFAULT) -> Optional[np.ndarray]:
     """
     Run astar algorithm on 2d weights.
 
