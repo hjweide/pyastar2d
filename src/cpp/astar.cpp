@@ -62,6 +62,23 @@ inline float orthogonal_y(int i0, int j0, int i1, int j1, int i2, int j2) {
   }
 }
 
+typedef float (*heuristic_ptr)(int, int, int, int, int, int);
+
+inline heuristic_ptr select_heuristic(int h) {
+  switch (h) {
+    case DIAGONAL_DISTANCE:
+      return linf_norm;
+    case MANHATTAN_DISTANCE:
+      return l1_norm;
+    case ORTHOGONAL_X:
+      return orthogonal_x;
+    case ORTHOGONAL_Y:
+      return orthogonal_y;
+    default:
+      return l1_norm;
+  }
+}
+
 // weights:        flattened h x w grid of costs
 // h, w:           height and width of grid
 // start, goal:    index of start/goal in flattened grid
@@ -101,9 +118,9 @@ static PyObject *astar(PyObject *self, PyObject *args) {
 
   int* nbrs = new int[8];
   
+  heuristic_ptr heuristic_func;
+
   // Get the heuristic method to use
-  float (*heuristic_func)(int, int, int, int, int, int);
-  
   if (heuristic_override == DEFAULT) {
     if (diag_ok) {
       heuristic_func = linf_norm;
@@ -111,22 +128,7 @@ static PyObject *astar(PyObject *self, PyObject *args) {
       heuristic_func = l1_norm;
     }
   } else {
-    switch(heuristic_override) {
-      case DIAGONAL_DISTANCE:
-        heuristic_func = linf_norm;
-        break;
-      case MANHATTAN_DISTANCE:
-        heuristic_func = l1_norm;
-        break;
-      case ORTHOGONAL_X:
-        heuristic_func = orthogonal_x;
-        break;
-      case ORTHOGONAL_Y:
-        heuristic_func = orthogonal_y;
-        break;
-      default:
-        return NULL;
-    }
+    heuristic_func = select_heuristic(heuristic_override);
   }
 
   while (!nodes_to_visit.empty()) {
