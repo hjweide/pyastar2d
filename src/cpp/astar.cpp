@@ -29,12 +29,12 @@ enum Heuristic { DEFAULT, ORTHOGONAL_X, ORTHOGONAL_Y };
 // See for various grid heuristics:
 // http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html#S7
 // L_\inf norm (diagonal distance)
-inline float linf_norm(int i0, int j0, int i1, int j1, int, int) {
+inline float linf_norm(int i0, int j0, int i1, int j1) {
   return std::max(std::abs(i0 - i1), std::abs(j0 - j1));
 }
 
 // L_1 norm (manhattan distance)
-inline float l1_norm(int i0, int j0, int i1, int j1, int, int) {
+inline float l1_norm(int i0, int j0, int i1, int j1) {
   return std::abs(i0 - i1) + std::abs(j0 - j1);
 }
 
@@ -73,7 +73,7 @@ inline heuristic_ptr select_heuristic(int h) {
     case ORTHOGONAL_Y:
       return orthogonal_y;
     default:
-      return l1_norm;
+      return NULL;
   }
 }
 
@@ -116,18 +116,12 @@ static PyObject *astar(PyObject *self, PyObject *args) {
 
   int* nbrs = new int[8];
   
-  heuristic_ptr heuristic_func;
+  int goal_i = goal / w;
+  int goal_j = goal % w;
+  int start_i = start / w;
+  int start_j = start % w;
 
-  // Get the heuristic method to use
-  if (heuristic_override == DEFAULT) {
-    if (diag_ok) {
-      heuristic_func = linf_norm;
-    } else {
-      heuristic_func = l1_norm;
-    }
-  } else {
-    heuristic_func = select_heuristic(heuristic_override);
-  }
+  heuristic_ptr heuristic_func = select_heuristic(heuristic_override);
 
   while (!nodes_to_visit.empty()) {
     // .top() doesn't actually remove the node
@@ -159,9 +153,20 @@ static PyObject *astar(PyObject *self, PyObject *args) {
         float new_cost = costs[cur.idx] + weights[nbrs[i]];
         if (new_cost < costs[nbrs[i]]) {
           // estimate the cost to the goal based on legal moves
-          heuristic_cost = heuristic_func(nbrs[i] / w, nbrs[i] % w,
-                                          goal    / w, goal    % w,
-                                          start   / w, start   % w);
+          // Get the heuristic method to use
+          if (heuristic_override == DEFAULT) {
+            if (diag_ok) {
+              heuristic_cost = linf_norm(nbrs[i] / w, nbrs[i] % w,
+                                         goal_i, goal_j);
+            } else {
+              heuristic_cost = l1_norm(nbrs[i] / w, nbrs[i] % w,
+                                       goal_i, goal_j);
+            }
+          } else {
+            heuristic_cost = heuristic_func(nbrs[i] / w, nbrs[i] % w,
+                                            goal_i, goal_j,
+                                            start_i, start_j);
+          }
 
           // paths with lower expected cost are explored first
           float priority = new_cost + heuristic_cost;
