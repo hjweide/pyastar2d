@@ -4,6 +4,7 @@
 #include <Python.h>
 #include <numpy/arrayobject.h>
 #include <iostream>
+#include <experimental_heuristics.h>
 
 
 const float INF = std::numeric_limits<float>::infinity();
@@ -24,8 +25,6 @@ bool operator<(const Node &n1, const Node &n2) {
   return n1.cost > n2.cost;
 }
 
-enum Heuristic { DEFAULT, ORTHOGONAL_X, ORTHOGONAL_Y };
-
 // See for various grid heuristics:
 // http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html#S7
 // L_\inf norm (diagonal distance)
@@ -38,44 +37,6 @@ inline float l1_norm(int i0, int j0, int i1, int j1) {
   return std::abs(i0 - i1) + std::abs(j0 - j1);
 }
 
-// Please note below heuristic is experimental and only for pretty lines
-// Orthogonal x (moves by x first, then half way by y)
-inline float orthogonal_x(int i0, int j0, int i1, int j1, int i2, int j2) {
-  int di = std::abs(i0 - i1);
-  int dim = std::abs(i1 - i2);
-  int djm = std::abs(j1 - j2);
-  if (di > (dim * 0.5)) {
-    return di + djm;
-  } else {
-    return std::abs(j0 - j1);
-  }
-}
-
-// Please note below heuristic is experimental and only for pretty lines
-// Orthogonal y (moves by y first, then half way by x)
-inline float orthogonal_y(int i0, int j0, int i1, int j1, int i2, int j2) {
-  int dj = std::abs(j0 - j1);
-  int djm = std::abs(j1 - j2);
-  int dim = std::abs(i1 - i2);
-  if (dj > (djm * 0.5)) {
-    return dj + dim;
-  } else {
-    return std::abs(i0 - i1);
-  }
-}
-
-typedef float (*heuristic_ptr)(int, int, int, int, int, int);
-
-inline heuristic_ptr select_heuristic(int h) {
-  switch (h) {
-    case ORTHOGONAL_X:
-      return orthogonal_x;
-    case ORTHOGONAL_Y:
-      return orthogonal_y;
-    default:
-      return NULL;
-  }
-}
 
 // weights:        flattened h x w grid of costs
 // h, w:           height and width of grid
@@ -156,16 +117,13 @@ static PyObject *astar(PyObject *self, PyObject *args) {
           // Get the heuristic method to use
           if (heuristic_override == DEFAULT) {
             if (diag_ok) {
-              heuristic_cost = linf_norm(nbrs[i] / w, nbrs[i] % w,
-                                         goal_i, goal_j);
+              heuristic_cost = linf_norm(nbrs[i] / w, nbrs[i] % w, goal_i, goal_j);
             } else {
-              heuristic_cost = l1_norm(nbrs[i] / w, nbrs[i] % w,
-                                       goal_i, goal_j);
+              heuristic_cost = l1_norm(nbrs[i] / w, nbrs[i] % w, goal_i, goal_j);
             }
           } else {
-            heuristic_cost = heuristic_func(nbrs[i] / w, nbrs[i] % w,
-                                            goal_i, goal_j,
-                                            start_i, start_j);
+            heuristic_cost = heuristic_func(
+              nbrs[i] / w, nbrs[i] % w, goal_i, goal_j, start_i, start_j);
           }
 
           // paths with lower expected cost are explored first

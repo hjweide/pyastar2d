@@ -5,8 +5,11 @@ dist.Distribution().fetch_build_eggs(["numpy"])
 import numpy
 
 astar_module = Extension(
-    'pyastar2d.astar', sources=['src/cpp/astar.cpp'],
-    include_dirs=[numpy.get_include()],  # for numpy/arrayobject.h
+    'pyastar2d.astar', sources=['src/cpp/astar.cpp', 'src/cpp/experimental_heuristics.cpp'],
+    include_dirs=[
+                    numpy.get_include(),   # for numpy/arrayobject.h
+                    'src/cpp'    # for experimental_heuristics.h
+                 ],
     extra_compile_args=["-O3", "-Wall", "-shared", "-fpic"],
 )
 
