@@ -24,7 +24,7 @@ bool operator<(const Node &n1, const Node &n2) {
   return n1.cost > n2.cost;
 }
 
-enum Heuristic { DEFAULT, DIAGONAL_DISTANCE, MANHATTAN_DISTANCE, ORTHOGONAL_X, ORTHOGONAL_Y };
+enum Heuristic { DEFAULT, ORTHOGONAL_X, ORTHOGONAL_Y };
 
 // See for various grid heuristics:
 // http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html#S7
@@ -38,6 +38,7 @@ inline float l1_norm(int i0, int j0, int i1, int j1, int, int) {
   return std::abs(i0 - i1) + std::abs(j0 - j1);
 }
 
+// Please note below heuristic is experimental and only for pretty lines
 // Orthogonal x (moves by x first, then half way by y)
 inline float orthogonal_x(int i0, int j0, int i1, int j1, int i2, int j2) {
   int di = std::abs(i0 - i1);
@@ -50,6 +51,7 @@ inline float orthogonal_x(int i0, int j0, int i1, int j1, int i2, int j2) {
   }
 }
 
+// Please note below heuristic is experimental and only for pretty lines
 // Orthogonal y (moves by y first, then half way by x)
 inline float orthogonal_y(int i0, int j0, int i1, int j1, int i2, int j2) {
   int dj = std::abs(j0 - j1);
@@ -66,10 +68,6 @@ typedef float (*heuristic_ptr)(int, int, int, int, int, int);
 
 inline heuristic_ptr select_heuristic(int h) {
   switch (h) {
-    case DIAGONAL_DISTANCE:
-      return linf_norm;
-    case MANHATTAN_DISTANCE:
-      return l1_norm;
     case ORTHOGONAL_X:
       return orthogonal_x;
     case ORTHOGONAL_Y:

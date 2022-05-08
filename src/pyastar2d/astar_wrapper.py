@@ -27,10 +27,8 @@ class Heuristic(IntEnum):
     """The supported heuristics."""
 
     DEFAULT = 0
-    DIAGONAL_DISTANCE = 1
-    MANHATTAN_DISTANCE = 2
-    ORTHOGONAL_X = 3
-    ORTHOGONAL_Y = 4
+    ORTHOGONAL_X = 1
+    ORTHOGONAL_Y = 2
 
 def astar_path(
         weights: np.ndarray,
@@ -42,8 +40,8 @@ def astar_path(
     Run astar algorithm on 2d weights.
 
     param np.ndarray weights: A grid of weights e.g. np.ones((10, 10), dtype=np.float32)
-    param Tuple[int, int] start: (x, y) point to start
-    param Tuple[int, int] goal: (x, y) point to end
+    param Tuple[int, int] start: (i, j)
+    param Tuple[int, int] goal: (i, j)
     param bool allow_diagonal: Whether to allow diagonal moves
     param Heuristic heuristic_override: Override heuristic, see Heuristic(IntEnum)
 
