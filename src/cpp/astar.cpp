@@ -4,6 +4,7 @@
 #include <Python.h>
 #include <numpy/arrayobject.h>
 #include <iostream>
+#include <experimental_heuristics.h>
 
 
 const float INF = std::numeric_limits<float>::infinity();
@@ -49,13 +50,15 @@ static PyObject *astar(PyObject *self, PyObject *args) {
   int start;
   int goal;
   int diag_ok;
+  int heuristic_override;
 
   if (!PyArg_ParseTuple(
-        args, "Oiiiii", // i = int, O = object
+        args, "Oiiiiii", // i = int, O = object
         &weights_object,
         &h, &w,
         &start, &goal,
-        &diag_ok))
+        &diag_ok, &heuristic_override
+        ))
     return NULL;
 
   float* weights = (float*) weights_object->data;
@@ -73,6 +76,13 @@ static PyObject *astar(PyObject *self, PyObject *args) {
   nodes_to_visit.push(start_node);
 
   int* nbrs = new int[8];
+  
+  int goal_i = goal / w;
+  int goal_j = goal % w;
+  int start_i = start / w;
+  int start_j = start % w;
+
+  heuristic_ptr heuristic_func = select_heuristic(heuristic_override);
 
   while (!nodes_to_visit.empty()) {
     // .top() doesn't actually remove the node
@@ -104,13 +114,16 @@ static PyObject *astar(PyObject *self, PyObject *args) {
         float new_cost = costs[cur.idx] + weights[nbrs[i]];
         if (new_cost < costs[nbrs[i]]) {
           // estimate the cost to the goal based on legal moves
-          if (diag_ok) {
-            heuristic_cost = linf_norm(nbrs[i] / w, nbrs[i] % w,
-                                       goal    / w, goal    % w);
-          }
-          else {
-            heuristic_cost = l1_norm(nbrs[i] / w, nbrs[i] % w,
-                                     goal    / w, goal    % w);
+          // Get the heuristic method to use
+          if (heuristic_override == DEFAULT) {
+            if (diag_ok) {
+              heuristic_cost = linf_norm(nbrs[i] / w, nbrs[i] % w, goal_i, goal_j);
+            } else {
+              heuristic_cost = l1_norm(nbrs[i] / w, nbrs[i] % w, goal_i, goal_j);
+            }
+          } else {
+            heuristic_cost = heuristic_func(
+              nbrs[i] / w, nbrs[i] % w, goal_i, goal_j, start_i, start_j);
           }
 
           // paths with lower expected cost are explored first
