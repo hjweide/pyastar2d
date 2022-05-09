@@ -96,7 +96,7 @@ static PyObject *astar(PyObject *self, PyObject *args) {
     nodes_to_visit.pop();
 
     int row = cur.idx / w;
-    int col = cur.idx % w;
+    int col = cur.idx - w * row;
     // check bounds and find up to eight neighbors: top to bottom, left to right
     nbrs[0] = (diag_ok && row > 0 && col > 0)          ? cur.idx - w - 1   : -1;
     nbrs[1] = (row > 0)                                ? cur.idx - w       : -1;
@@ -108,30 +108,36 @@ static PyObject *astar(PyObject *self, PyObject *args) {
     nbrs[7] = (diag_ok && row + 1 < h && col + 1 < w ) ? cur.idx + w + 1   : -1;
 
     float heuristic_cost;
+    int i0;
+    int j0;
+    int idx;
+
     for (int i = 0; i < 8; ++i) {
-      if (nbrs[i] >= 0) {
+      idx = nbrs[i];
+      if (idx >= 0) {
         // the sum of the cost so far and the cost of this move
-        float new_cost = costs[cur.idx] + weights[nbrs[i]];
-        if (new_cost < costs[nbrs[i]]) {
+        float new_cost = costs[cur.idx] + weights[idx];
+        if (new_cost < costs[idx]) {
+          i0 = idx / w;
+          j0 = idx - i0 * w;
           // estimate the cost to the goal based on legal moves
           // Get the heuristic method to use
           if (heuristic_override == DEFAULT) {
             if (diag_ok) {
-              heuristic_cost = linf_norm(nbrs[i] / w, nbrs[i] % w, goal_i, goal_j);
+              heuristic_cost = linf_norm(i0, j0, goal_i, goal_j);
             } else {
-              heuristic_cost = l1_norm(nbrs[i] / w, nbrs[i] % w, goal_i, goal_j);
+              heuristic_cost = l1_norm(i0, j0, goal_i, goal_j);
             }
           } else {
-            heuristic_cost = heuristic_func(
-              nbrs[i] / w, nbrs[i] % w, goal_i, goal_j, start_i, start_j);
+            heuristic_cost = heuristic_func(i0, j0, goal_i, goal_j, start_i, start_j);
           }
 
           // paths with lower expected cost are explored first
           float priority = new_cost + heuristic_cost;
-          nodes_to_visit.push(Node(nbrs[i], priority, cur.path_length + 1));
+          nodes_to_visit.push(Node(idx, priority, cur.path_length + 1));
 
-          costs[nbrs[i]] = new_cost;
-          paths[nbrs[i]] = cur.idx;
+          costs[idx] = new_cost;
+          paths[idx] = cur.idx;
         }
       }
     }
