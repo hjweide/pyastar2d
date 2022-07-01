@@ -73,9 +73,11 @@ array([[0, 0],
        [3, 3],
        [4, 4]])
 ```
-Note that all grid points are represented as `(i, j)` coordinates.  An example
-of using `pyastar2d` to solve a maze is given in `examples/maze_solver.py`.
-
+Note that all grid points are represented as `(i, j)` coordinates. 
+An example of using `pyastar2d` to solve a maze is given in `examples/maze_solver.py`. However, you will need to install the [imageio](https://pypi.org/project/imageio/) package in order to run this example. You can install it by using the command:
+```bash
+pip install imageio
+````
 ## Example Results
 <a name="example-results"></a>
 To test the implementation, I grabbed two nasty mazes from Wikipedia.  They are
