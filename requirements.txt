@@ -1,2 +1,2 @@
 imageio
-numpy
+numpy==1.22.4
