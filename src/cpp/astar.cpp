@@ -37,6 +37,11 @@ inline float l1_norm(int i0, int j0, int i1, int j1) {
   return std::abs(i0 - i1) + std::abs(j0 - j1);
 }
 
+// L_2 norm (manhattan distance)
+inline float l2_norm(int i0, int j0, int i1, int j1) {
+  return std::hypot(i0 - i1, j0 - j1);
+}
+
 
 // weights:        flattened h x w grid of costs
 // h, w:           height and width of grid
@@ -76,7 +81,7 @@ static PyObject *astar(PyObject *self, PyObject *args) {
   nodes_to_visit.push(start_node);
 
   int* nbrs = new int[8];
-  
+
   int goal_i = goal / w;
   int goal_j = goal % w;
   int start_i = start / w;
@@ -119,7 +124,7 @@ static PyObject *astar(PyObject *self, PyObject *args) {
             if (diag_ok) {
               heuristic_cost = linf_norm(nbrs[i] / w, nbrs[i] % w, goal_i, goal_j);
             } else {
-              heuristic_cost = l1_norm(nbrs[i] / w, nbrs[i] % w, goal_i, goal_j);
+              heuristic_cost = l2_norm(nbrs[i] / w, nbrs[i] % w, goal_i, goal_j);
             }
           } else {
             heuristic_cost = heuristic_func(
