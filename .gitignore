@@ -4,3 +4,7 @@
 *.pyc
 *.png
 *.cache
+*.egg-info
+.vscode
+*.o
+build/
