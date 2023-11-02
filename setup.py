@@ -22,7 +22,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyastar2d",
-    version="1.0.6",
+    version="1.0.7",
     author="Hendrik Weideman",
     author_email="hjweide@gmail.com",
     description=(

@@ -37,6 +37,10 @@ inline float l1_norm(int i0, int j0, int i1, int j1) {
   return std::abs(i0 - i1) + std::abs(j0 - j1);
 }
 
+// Tie breaker heuristic (distance to direct line between start and goal)
+inline float tie_breaker(int i0, int j0, int is, int js, int ig, int jg) {
+  return 0.001 * abs((j0 - jg)*(is - ig) - (js - jg)*(i0 - ig));
+}
 
 // weights:        flattened h x w grid of costs
 // h, w:           height and width of grid
@@ -76,7 +80,7 @@ static PyObject *astar(PyObject *self, PyObject *args) {
   nodes_to_visit.push(start_node);
 
   int* nbrs = new int[8];
-  
+
   int goal_i = goal / w;
   int goal_j = goal % w;
   int start_i = start / w;
@@ -107,23 +111,31 @@ static PyObject *astar(PyObject *self, PyObject *args) {
     nbrs[6] = (row + 1 < h)                            ? cur.idx + w       : -1;
     nbrs[7] = (diag_ok && row + 1 < h && col + 1 < w ) ? cur.idx + w + 1   : -1;
 
-    float heuristic_cost;
+    float heuristic_cost, current_i, current_j;
     for (int i = 0; i < 8; ++i) {
       if (nbrs[i] >= 0) {
-        // the sum of the cost so far and the cost of this move
-        float new_cost = costs[cur.idx] + weights[nbrs[i]];
+        // Calculate the coordinates of the neighbor
+        current_i = nbrs[i] / w;
+        current_j = nbrs[i] % w;
+
+        // Calculate the tie breaker heuristic
+        float tie_break = tie_breaker(
+          current_i, current_j, start_i, start_j, goal_i, goal_j);
+
+        // Sum of the cost so far and the cost of this move
+        float new_cost = costs[cur.idx] + weights[nbrs[i]] + tie_break;
         if (new_cost < costs[nbrs[i]]) {
           // estimate the cost to the goal based on legal moves
           // Get the heuristic method to use
           if (heuristic_override == DEFAULT) {
             if (diag_ok) {
-              heuristic_cost = linf_norm(nbrs[i] / w, nbrs[i] % w, goal_i, goal_j);
+              heuristic_cost = linf_norm(current_i, current_j, goal_i, goal_j);
             } else {
-              heuristic_cost = l1_norm(nbrs[i] / w, nbrs[i] % w, goal_i, goal_j);
+              heuristic_cost = l1_norm(current_i, current_j, goal_i, goal_j);
             }
           } else {
             heuristic_cost = heuristic_func(
-              nbrs[i] / w, nbrs[i] % w, goal_i, goal_j, start_i, start_j);
+              current_i, current_j, goal_i, goal_j, start_i, start_j);
           }
 
           // paths with lower expected cost are explored first
