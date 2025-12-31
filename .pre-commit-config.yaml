@@ -1,0 +1,51 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.20.0
+    hooks:
+      - id: pyupgrade
+        name: pyupgrade
+        description: Run PyUpgrade on Python code.
+  - repo: https://github.com/pycqa/isort
+    rev: 6.0.1
+    hooks:
+      - id: isort
+        args: [--settings-path setup.cfg]
+        name: isort
+        description: Run import sorting (isort) on Python code.
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        name: Black for Python code formatting
+        language_version: python3
+        args: ["--skip-string-normalization", "--target-version", "py310", "--line-length", "100"]
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.2.0
+    hooks:
+      - id: flake8
+        name: Flake8 for Python code linting
+        args: ["--config", ".flake8"]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: double-quote-string-fixer
+        name: Format single quotes
+      - id: requirements-txt-fixer
+        name: Format requirements.txt
+      - id: check-yaml
+        name: Format YAML files
+        args: ['--unsafe']
+      - id: trailing-whitespace
+        name: Fix Whitespace
+      - id: mixed-line-ending
+        name: Fix EOL
+        args: ['--fix=lf']
+      - id: end-of-file-fixer
+        name: Fix EOF
+      - id: check-shebang-scripts-are-executable
+        name: Ensure directives are executable
+      - id: detect-private-key
+        name: Ensure no private keys
+      - id: check-ast
