@@ -148,10 +148,33 @@ pip install -r requirements-dev.txt
 ```
 before running
 ```bash
-py.test
+pytest
 ```
 The tests are fairly basic but cover some of the
 more common pitfalls.  Pull requests for more extensive tests are welcome.
+
+## Code Formatting
+
+It's recommended that you use `pre-commit` to ensure linting procedures are
+run on any code you write.  See [pre-commit.com](https://pre-commit.com/) for
+more information.
+
+Reference [pre-commit's installation instructions](https://pre-commit.com/#install)
+for software installation on your OS/platform. After you have the software
+installed, run `pre-commit install` on the command line. Now every time you commit
+to this project's code base the linter procedures will automatically run over the
+changed files.  To run pre-commit on files preemtively from the command line use:
+
+```bash
+pip install -r requirements-dev.txt
+pre-commit run --all-files
+```
+
+The code base has been formatted by [Black](https://black.readthedocs.io/en/stable/).
+Furthermore, try to conform to `PEP8`.  You should set up your preferred editor to
+use `flake8` as its Python linter, but pre-commit will ensure compliance before a
+git commit is completed.  This will use the `flake8` configuration within
+`.flake8`, which ignores several errors and stylistic considerations.
 
 ## References
 1. [A\* search algorithm on Wikipedia](https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode)
