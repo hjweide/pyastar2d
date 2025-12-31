@@ -93,7 +93,7 @@ python examples/maze_solver.py --input mazes/maze_small.png --output solns/maze_
 python examples/maze_solver.py --input mazes/maze_large.png --output solns/maze_large.png
 ```
 
-### Small Maze (1802 x 1802): 
+### Small Maze (1802 x 1802):
 ```bash
 time python examples/maze_solver.py --input mazes/maze_small.png --output solns/maze_small.png
 Loaded maze of shape (1802, 1802) from mazes/maze_small.png
@@ -108,7 +108,7 @@ sys	0m0.606s
 The solution found for the small maze is shown below:
 <img src="https://github.com/hjweide/pyastar2d/raw/master/solns/maze_small_soln.png" alt="Maze Small Solution" style="width: 100%"/>
 
-### Large Maze (4002 x 4002): 
+### Large Maze (4002 x 4002):
 ```bash
 time python examples/maze_solver.py --input mazes/maze_large.png --output solns/maze_large.png
 Loaded maze of shape (4002, 4002) from mazes/maze_large.png
@@ -156,4 +156,3 @@ more common pitfalls.  Pull requests for more extensive tests are welcome.
 ## References
 1. [A\* search algorithm on Wikipedia](https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode)
 2. [Pathfinding with A* on Red Blob Games](http://www.redblobgames.com/pathfinding/a-star/introduction.html)
-
