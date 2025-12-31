@@ -32,7 +32,7 @@ astar_module = Extension(
         'src/cpp',
         get_numpy_include(),
     ],
-    extra_compile_args=['-shared'],
+    extra_compile_args=['-O3', '-Wall', '-shared', '-fpic'],
     language='c++',
 )
 
@@ -49,7 +49,7 @@ setup(
     packages=find_packages(where='src', exclude=('tests',)),
     package_dir={'': 'src'},
     install_requires=install_requires,
-    python_requires='>=3.7',
+    python_requires='>=3.8',
     ext_modules=[astar_module],
     options={'bdist_wheel': {'py_limited_api': 'cp38'}},
 )
