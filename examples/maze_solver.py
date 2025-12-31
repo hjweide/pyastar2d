@@ -4,7 +4,6 @@ from os.path import basename, join
 
 import imageio
 import numpy as np
-
 import pyastar2d
 
 
@@ -32,7 +31,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    maze = imageio.imread(args.input)
+    maze = imageio.v3.imread(args.input, mode="L")
 
     if maze is None:
         print(f'No file found: {args.input}')
