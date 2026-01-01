@@ -26,13 +26,16 @@ astar_module = Extension(
         'src/cpp/astar.cpp',
         'src/cpp/experimental_heuristics.cpp',
     ],
-    define_macros=[('Py_LIMITED_API', '0x03080000')],
+    define_macros=[
+        ('Py_LIMITED_API', '0x03080000'),
+        ('NPY_NO_DEPRECATED_API', 'NPY_1_7_API_VERSION'),
+    ],
     py_limited_api=True,
     include_dirs=[
         'src/cpp',
         get_numpy_include(),
     ],
-    extra_compile_args=['-O3', '-Wall', '-shared', '-fpic'],
+    extra_compile_args=['-O3', '-fpic'],
     language='c++',
 )
 
