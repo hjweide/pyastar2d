@@ -45,8 +45,6 @@ inline float l1_norm(int i0, int j0, int i1, int j1) {
 // diag_ok:        if true, allows diagonal moves (8-conn.)
 // paths (output): for each node, stores previous node in path
 static PyObject *astar(PyObject *self, PyObject *args) {
-  import_array();
-
   PyArrayObject* weights_object;
   int h;
   int w;

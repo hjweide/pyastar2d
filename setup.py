@@ -35,7 +35,7 @@ astar_module = Extension(
         'src/cpp',
         get_numpy_include(),
     ],
-    extra_compile_args=['-O3', '-fpic'],
+    extra_compile_args=['-O3', '-fpic', '-Wall'],
     language='c++',
 )
 
