@@ -77,7 +77,7 @@ static PyObject *astar(PyObject *self, PyObject *args) {
   nodes_to_visit.push(start_node);
 
   int* nbrs = new int[8];
-  
+
   int goal_i = goal / w;
   int goal_j = goal % w;
   int start_i = start / w;
