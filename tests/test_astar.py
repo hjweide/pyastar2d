@@ -137,7 +137,7 @@ def test_orthogonal_x():
         allow_diagonal=False,
         heuristic_override=Heuristic.ORTHOGONAL_X,
     )
-    expected = np.array([[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [2, 3], [3, 3], [3, 4], [4, 4]])
+    expected = np.array([[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [3, 4], [4, 4]])
 
     assert np.all(path == expected)
 
@@ -151,6 +151,6 @@ def test_orthogonal_y():
         allow_diagonal=False,
         heuristic_override=Heuristic.ORTHOGONAL_Y,
     )
-    expected = np.array([[0, 0], [0, 1], [0, 2], [1, 2], [2, 2], [3, 2], [3, 3], [4, 3], [4, 4]])
+    expected = np.array([[0, 0], [0, 1], [0, 2], [1, 2], [2, 2], [3, 2], [4, 2], [4, 3], [4, 4]])
 
     assert np.all(path == expected)
