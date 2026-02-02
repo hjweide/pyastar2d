@@ -1,2 +1,3 @@
-from pyastar2d.astar_wrapper import astar_path, Heuristic
-__all__ = ["astar_path", "Heuristic"]
+from pyastar2d.astar_wrapper import Heuristic, astar_path
+
+__all__ = ['astar_path', 'Heuristic']

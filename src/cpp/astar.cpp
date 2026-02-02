@@ -2,6 +2,7 @@
 #include <limits>
 #include <cmath>
 #include <Python.h>
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/arrayobject.h>
 #include <iostream>
 #include <experimental_heuristics.h>
@@ -44,7 +45,7 @@ inline float l1_norm(int i0, int j0, int i1, int j1) {
 // diag_ok:        if true, allows diagonal moves (8-conn.)
 // paths (output): for each node, stores previous node in path
 static PyObject *astar(PyObject *self, PyObject *args) {
-  const PyArrayObject* weights_object;
+  PyArrayObject* weights_object;
   int h;
   int w;
   int start;
@@ -61,7 +62,7 @@ static PyObject *astar(PyObject *self, PyObject *args) {
         ))
     return NULL;
 
-  float* weights = (float*) weights_object->data;
+  float* weights = (float*) PyArray_DATA(weights_object);
   int* paths = new int[h * w];
   int path_length = -1;
 
@@ -76,7 +77,7 @@ static PyObject *astar(PyObject *self, PyObject *args) {
   nodes_to_visit.push(start_node);
 
   int* nbrs = new int[8];
-  
+
   int goal_i = goal / w;
   int goal_j = goal % w;
   int start_i = start / w;
@@ -141,11 +142,13 @@ static PyObject *astar(PyObject *self, PyObject *args) {
   if (path_length >= 0) {
     npy_intp dims[2] = {path_length, 2};
     PyArrayObject* path = (PyArrayObject*) PyArray_SimpleNew(2, dims, NPY_INT32);
+    char* data = (char*) PyArray_BYTES(path);
+    npy_intp* strides = PyArray_STRIDES(path);
     npy_int32 *iptr, *jptr;
     int idx = goal;
     for (npy_intp i = dims[0] - 1; i >= 0; --i) {
-        iptr = (npy_int32*) (path->data + i * path->strides[0]);
-        jptr = (npy_int32*) (path->data + i * path->strides[0] + path->strides[1]);
+        iptr = (npy_int32*) (data + i * strides[0]);
+        jptr = (npy_int32*) (data + i * strides[0] + strides[1]);
 
         *iptr = idx / w;
         *jptr = idx % w;
