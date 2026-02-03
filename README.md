@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.com/hjweide/pyastar2d.svg?branch=master)](https://travis-ci.com/hjweide/pyastar2d)
-[![Coverage Status](https://coveralls.io/repos/github/hjweide/pyastar2d/badge.svg?branch=master)](https://coveralls.io/github/hjweide/pyastar2d?branch=master)
+[![Build Status](https://github.com/hjweide/pyastar2d/actions/workflows/python-publish.yml/badge.svg)](https://github.com/hjweide/pyastar2d/actions/workflows/python-publish.yml)
 [![PyPI version](https://badge.fury.io/py/pyastar2d.svg)](https://badge.fury.io/py/pyastar2d)
 # PyAstar2D
 This is a very simple C++ implementation of the A\* algorithm for pathfinding
