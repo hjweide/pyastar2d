@@ -55,5 +55,5 @@ setup(
     install_requires=install_requires,
     python_requires='>=3.9',
     ext_modules=[astar_module],
-    options={'bdist_wheel': {'py_limited_api': 'cp38'}},
+    options={'bdist_wheel': {'py_limited_api': 'cp39'}},
 )
