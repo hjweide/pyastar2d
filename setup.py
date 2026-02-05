@@ -27,8 +27,9 @@ astar_module = Extension(
         'src/cpp/experimental_heuristics.cpp',
     ],
     define_macros=[
-        ('Py_LIMITED_API', '0x03080000'),
-        ('NPY_NO_DEPRECATED_API', 'NPY_1_7_API_VERSION'),
+        ('Py_LIMITED_API', '0x03090000'),
+        ('NPY_NO_DEPRECATED_API', 'NPY_2_0_API_VERSION'),
+        ('NPY_TARGET_VERSION', 'NPY_2_0_API_VERSION'),
     ],
     py_limited_api=True,
     include_dirs=[
@@ -42,7 +43,7 @@ astar_module = Extension(
 # Define package metadata
 setup(
     name='pyastar2d',
-    version='1.1.0',
+    version='1.1.1',
     author='Hendrik Weideman',
     author_email='hjweide@gmail.com',
     description='A simple implementation of the A* algorithm for path-finding on a two-dimensional grid.',
@@ -52,7 +53,7 @@ setup(
     packages=find_packages(where='src', exclude=('tests',)),
     package_dir={'': 'src'},
     install_requires=install_requires,
-    python_requires='>=3.8',
+    python_requires='>=3.9',
     ext_modules=[astar_module],
-    options={'bdist_wheel': {'py_limited_api': 'cp38'}},
+    options={'bdist_wheel': {'py_limited_api': 'cp39'}},
 )

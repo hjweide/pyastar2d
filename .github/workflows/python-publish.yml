@@ -50,7 +50,7 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.3.0
         env:
-          CIBW_SKIP: "cp314t-*"
+          CIBW_SKIP: "cp38-* cp314t-*"
 
       - uses: actions/upload-artifact@v6
         with:
