@@ -43,7 +43,7 @@ astar_module = Extension(
 # Define package metadata
 setup(
     name='pyastar2d',
-    version='1.1.1',
+    use_scm_version=True,
     author='Hendrik Weideman',
     author_email='hjweide@gmail.com',
     description='A simple implementation of the A* algorithm for path-finding on a two-dimensional grid.',
