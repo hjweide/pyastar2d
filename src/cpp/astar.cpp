@@ -83,7 +83,7 @@ static PyObject *astar(PyObject *self, PyObject *args) {
   int start_j = start % w;
 
   heuristic_ptr heuristic_func = select_heuristic(heuristic_override);
-
+  Py_BEGIN_ALLOW_THREADS
   while (!nodes_to_visit.empty()) {
     // .top() doesn't actually remove the node
     Node cur = nodes_to_visit.top();
@@ -136,6 +136,7 @@ static PyObject *astar(PyObject *self, PyObject *args) {
       }
     }
   }
+  Py_END_ALLOW_THREADS
 
   PyObject *return_val;
   if (path_length >= 0) {
